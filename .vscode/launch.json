@@ -1,0 +1,51 @@
+{
+    "configurations": [
+        {
+            "name": "Python: Train GPT3 via Megatron-DS",
+            "type": "python",
+            "request": "launch",
+            "module": "torch.distributed.launch",
+            "justMyCode": false,
+            "subProcess": true,
+            "cwd": "${workspaceFolder}/third_party/Megatron-DeepSpeed",
+            "args": [
+                "--standalone",
+                "--nnodes=1",
+                "--nproc-per-node=1",
+                "pretrain_gpt.py",
+                "--num-layers", "24",
+                "--hidden-size", "1024",
+                "--num-attention-heads", "16",
+                "--seq-length", "1024",
+                "--max-position-embeddings", "1024",
+                "--micro-batch-size", "1",
+                "--global-batch-size", "1",
+                "--lr", "0.00015",
+                "--train-iters", "500000",
+                "--lr-decay-iters", "320000",
+                "--lr-decay-style", "cosine",
+                "--min-lr", "1.0e-5",
+                "--weight-decay", "1e-2",
+                "--lr-warmup-fraction", ".01",
+                "--clip-grad", "1.0",
+                "--fp16",
+                "--data-path", "matemato/pokemon_bulbapedia_all",
+                "--vocab-file", "${workspaceFolder}/gpt3/data/gpt2-vocab.json",
+                "--merge-file", "${workspaceFolder}/gpt3/data/gpt2-merges.txt",
+                "--data-impl", "hf",
+                "--split", "949,50,1",
+                "--log-interval", "100",
+                "--save-interval", "10000",
+                "--eval-interval", "1000",
+                "--eval-iters", "10",
+                "--save", "checkpoints/gpt_345m_msamp",
+                "--load", "checkpoints/gpt_345m_msamp",
+                // "--msamp",
+                // "--msamp-opt-level", "O2",
+                "--deepspeed",
+                "--deepspeed_config", "ds_config.json",
+                "--num-workers", "1"
+            ]
+        }
+    ]
+}
